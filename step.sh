@@ -13,5 +13,7 @@ pip install -r requirements.txt
 # Install flash_attn without build isolation
 pip install flash_attn --no-build-isolation
 
+pip install gsutil
+
 # Copy files from Google Cloud Storage
 gsutil -m cp -r gs://step-edit/ /workspace
