@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd /workspace/
 # Clone the repository
 git clone https://github.com/stepfun-ai/Step1X-Edit.git
 
