@@ -1,0 +1,49 @@
+#!/bin/bash
+
+cd /${WORKSPACE}/
+
+git clone https://github.com/comfyanonymous/ComfyUI.git
+cd ComfyUI
+pip3 install -r requirements.txt
+# Install common custom nodes
+cd custom_nodes
+git clone https://github.com/ltdrdata/ComfyUI-Manager.git
+cd ..
+# Create models directory
+mkdir -p models/checkpoints
+
+cd /workspace
+nohup cloudflared tunnel --url http://localhost:8181 > cloudflared.log 2>&1 &
+pip install -U "huggingface_hub[cli]"
+
+huggingface-cli login --token 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
+
+mv flux1-dev-kontext_fp8_scaled.safetensors /workspace/ComfyUI/models/diffusion_models
+
+
+cd /workspace/ComfyUI/models
+
+#qwen
+
+huggingface-cli download Comfy-Org/Qwen-Image-Edit_ComfyUI "split_files/diffusion_models/qwen_image_edit_bf16.safetensors" --local-dir ./diffusion_models --local-dir-use-symlinks False
+
+huggingface-cli download Comfy-Org/Qwen-Image_ComfyUI split_files/vae/qwen_image_vae.safetensors --local-dir ./vae --local-dir-use-symlinks False
+
+huggingface-cli download Comfy-Org/Qwen-Image_ComfyUI split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors --local-dir ./text_encoders --local-dir-use-symlinks False
+
+huggingface-cli download tamm5y5m5/word Qwen_edit_v1_000046000.safetensors --local-dir ./loras --local-dir-use-symlinks False
+
+#kontext
+
+cd /workspace/ComfyUI/models
+
+huggingface-cli download Comfy-Org/Qwen-Image-Edit_ComfyUI "split_files/diffusion_models/qwen_image_edit_bf16.safetensors" --local-dir ./diffusion_models --local-dir-use-symlinks False
+
+huggingface-cli download Comfy-Org/Qwen-Image_ComfyUI split_files/vae/qwen_image_vae.safetensors --local-dir ./vae --local-dir-use-symlinks False
+
+huggingface-cli download Comfy-Org/Qwen-Image_ComfyUI split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors --local-dir ./text_encoders --local-dir-use-symlinks False
+
+huggingface-cli download tamm5y5m5/word Qwen_edit_v1_000046000.safetensors --local-dir ./loras --local-dir-use-symlinks False
+
+cd /workspace
+nohup cloudflared tunnel --url http://localhost:8181 > cloudflared.log 2>&1 &
